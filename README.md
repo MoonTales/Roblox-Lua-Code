@@ -1,4 +1,4 @@
-# Roblox Summer Camp Scripts 
+# Roblox Lua Scripts 
 
 ## A collection of beginner-friendly Roblox Studio scripts designed to teach core gameplay scripting concepts using Lua.
 
