@@ -9,7 +9,7 @@
 ```lua
 --[[ CONFIGURABLE VARIABLES ]]
 local JUMP_HEIGHT = 150
-local JUMP_RESET_HEIGHT = 50
+local JUMP_RESET_HEIGHT = 7.2
 local BOOST_DURATION = 2
 --[[ END CONFIG ]]
 
