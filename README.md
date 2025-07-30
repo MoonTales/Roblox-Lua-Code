@@ -183,8 +183,9 @@ RunService.Stepped:Connect(movePlatform)
 
 ```lua
 --[[ CONFIGURABLE VARIABLES ]]
-local DAMAGE_AMOUNT = 8          -- How much damage to deal each second
-local DAMAGE_DURATION = 5        -- How many seconds the damage effect lasts
+local DAMAGE_AMOUNT = 8           -- Amount of health to change per second
+local DAMAGE_DURATION = 5         -- How many seconds the effect lasts
+local HEAL_INSTEAD = false        -- Set to true to heal instead of hurt
 --[[ END CONFIG ]]
 
 local poisonTimers = {}
@@ -208,7 +209,11 @@ script.Parent.Touched:Connect(function(part)
 					local t = poisonTimers[player]
 					if t then
 						if os.time() < t then
-							h:TakeDamage(DAMAGE_AMOUNT)
+							if HEAL_INSTEAD then
+								h.Health = math.min(h.MaxHealth, h.Health + DAMAGE_AMOUNT)
+							else
+								h:TakeDamage(DAMAGE_AMOUNT)
+							end
 						else
 							poisonTimers[player] = nil
 						end
@@ -221,18 +226,19 @@ script.Parent.Touched:Connect(function(part)
 		end
 	end
 end)
-
 ```
 
-> Parent: Any part that represents a hazardous area (like poison or lava)
+> Parent: Any part representing a poison or healing zone
 >
 > Trigger: When a player touches the part
 >
-> Result: The player takes damage over time for a few seconds
+> Result: The player either takes damage or is healed over time
 >
 > Customization:  
-> - Change `DAMAGE_AMOUNT` to increase or decrease the damage per second  
-> - Change `DAMAGE_DURATION` to adjust how long the damage effect lasts
+> - `DAMAGE_AMOUNT`: how much health to remove or add each second  
+> - `DAMAGE_DURATION`: how long the effect lasts  
+> - `HEAL_INSTEAD`: set to `true` to make this a healing zone instead of a damaging one
+
 
 
 ### Disappearing Platform Script:
