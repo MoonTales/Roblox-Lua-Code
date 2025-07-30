@@ -332,3 +332,79 @@ toggleLaser()
 > - `BASE_REAPPEAR_TIME`: how long the laser stays off  
 > - `VANISH_VARIANCE` / `REAPPEAR_VARIANCE`: add randomness to timing  
 > - `DAMAGE_AMOUNT`: how much health is removed on touch
+
+```
+
+---
+
+### Teleporter:
+
+```lua
+--[[ CONFIGURABLE VARIABLES ]]
+local COOLDOWN_TIME = 1.5     -- Time in seconds between allowed teleports
+local HEIGHT_OFFSET = 3       -- Vertical offset to avoid getting stuck in floor
+--[[ END CONFIG ]]
+
+local teleporterFolder = script.Parent
+local teleportParts = {}
+
+-- Find exactly two teleport parts under the same parent
+for _, child in pairs(teleporterFolder:GetChildren()) do
+	if child:IsA("BasePart") then
+		table.insert(teleportParts, child)
+	end
+end
+
+-- Safety check
+if #teleportParts ~= 2 then
+	warn("Teleport system needs exactly 2 BaseParts under the same parent.")
+	return
+end
+
+local partA = teleportParts[1]
+local partB = teleportParts[2]
+
+local lastTeleport = {}
+
+local function canTeleport(player)
+	return not lastTeleport[player] or tick() - lastTeleport[player] > COOLDOWN_TIME
+end
+
+local function teleportPlayer(player, destination)
+	local char = player.Character
+	if char and char:FindFirstChild("HumanoidRootPart") then
+		char:MoveTo(destination.Position + Vector3.new(0, HEIGHT_OFFSET, 0))
+		lastTeleport[player] = tick()
+	end
+end
+
+local function onTouched(thisPart, otherPart)
+	local character = otherPart.Parent
+	local humanoid = character and character:FindFirstChild("Humanoid")
+	if humanoid then
+		local player = game.Players:GetPlayerFromCharacter(character)
+		if player and canTeleport(player) then
+			local destination = (thisPart == partA) and partB or partA
+			teleportPlayer(player, destination)
+		end
+	end
+end
+
+-- Connect both parts
+partA.Touched:Connect(function(hit) onTouched(partA, hit) end)
+partB.Touched:Connect(function(hit) onTouched(partB, hit) end)
+
+```
+> Parent: A **folder** or **model** containing exactly **two** teleporter **parts**
+>
+> Trigger: When a player touches either part
+>
+> Result: The player is instantly teleported to the other part
+>
+> Customization:
+> - `COOLDOWN_TIME`: How long a player must wait before teleporting again
+> - `HEIGHT_OFFSET`: How far above the target the player will be placed to avoid overlap
+>
+> ⚠️ Note: The folder or model **must contain exactly two parts**. Add the script to that folder/model.
+```
+
