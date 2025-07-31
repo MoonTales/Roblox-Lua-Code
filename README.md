@@ -429,4 +429,43 @@ end)
 >
 > Result: The NPC randomly says a promt
 >
+
+
+
+### Order Talking NPC
+```lua
+local ChatService = game:GetService("Chat")
+local head = script.Parent.Head
+local prompt = script.Parent.ProximityPrompt
+
+-- Create as much text as you want!
+local phrases = {
+	"Welcome to the Sensei Obby!",
+	"This obby is designed to showcase a bunch of features.",
+	"Good luck!",
+	"Can you find all the secrets?",
+	"Watch out for tricky jumps!"
+}
+
+-- Keep track of which phrase to say next
+local currentIndex = 1
+
+prompt.Triggered:Connect(function()
+	-- Get the current phrase
+	local phrase = phrases[currentIndex]
+	ChatService:Chat(head, phrase, Enum.ChatColor.White)
+
+	-- Move to the next phrase, or loop back to 1
+	currentIndex = currentIndex + 1
+	if currentIndex > #phrases then
+		currentIndex = 1
+	end
+end)
+```
+> Parent: Any object that you would like to talk. it **MUST** have a proximity promt attached to it
+>
+> Trigger: When a playerinteracts with the promt
+>
+> Result: The NPC says a promt in order
+>
 ```
