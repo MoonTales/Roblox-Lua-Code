@@ -333,10 +333,6 @@ toggleLaser()
 > - `VANISH_VARIANCE` / `REAPPEAR_VARIANCE`: add randomness to timing  
 > - `DAMAGE_AMOUNT`: how much health is removed on touch
 
-```
-
----
-
 ### Teleporter:
 
 ```lua
@@ -406,5 +402,31 @@ partB.Touched:Connect(function(hit) onTouched(partB, hit) end)
 > - `HEIGHT_OFFSET`: How far above the target the player will be placed to avoid overlap
 >
 > ⚠️ Note: The folder or model **must contain exactly two parts**. Add the script to that folder/model.
-```
 
+## NPCs:
+
+### Random Talking NPC
+```lua
+local ChatService = game:GetService("Chat")
+local head = script.Parent.Head
+local prompt = script.Parent.ProximityPrompt
+
+--Create as much text as you want!
+local phrases = {
+	"Welcome to the Sensei Obby! This obby is designed to showcase a bunch of features. Goodluck!"
+}
+
+
+prompt.Triggered:Connect(function()
+	local RandomPhrase = phrases[math.random(1 , #phrases)]
+	ChatService:Chat(head, RandomPhrase, Enum.ChatColor.White)
+end)
+
+```
+> Parent: Any object that you would like to talk. it **MUST** have a proximity promt attached to it
+>
+> Trigger: When a playerinteracts with the promt
+>
+> Result: The NPC randomly says a promt
+>
+```
